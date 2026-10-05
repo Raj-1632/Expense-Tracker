@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Summary{% endblock %}
+
+{% block content %}
+<h3 class="mb-3">Spending Summary</h3>
+
+{% if rows %}
+<div class="card shadow-sm">
+  <table class="table mb-0 align-middle">
+    <thead class="table-dark">
+      <tr><th>Category</th><th class="text-center">Entries</th><th class="text-end">Total</th><th style="width:35%">Share</th></tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      {% set pct = (r.total / grand_total * 100) if grand_total else 0 %}
+      <tr>
+        <td>{{ r.category }}</td>
+        <td class="text-center">{{ r.count }}</td>
+        <td class="text-end">₹{{ "%.2f"|format(r.total) }}</td>
+        <td>
+          <div class="progress" role="progressbar">
+            <div class="progress-bar" style="width: {{ pct|round(1) }}%">{{ pct|round(1) }}%</div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr class="table-light fw-bold">
+        <td colspan="2" class="text-end">Grand total</td>
+        <td class="text-end">₹{{ "%.2f"|format(grand_total) }}</td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+{% else %}
+  <div class="alert alert-info">Nothing to summarise yet. Add some expenses first.</div>
+{% endif %}
+{% endblock %}
